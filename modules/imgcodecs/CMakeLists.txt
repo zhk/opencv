@@ -45,6 +45,11 @@ if(HAVE_TIFF)
   list(APPEND GRFMT_LIBS ${TIFF_LIBRARIES})
 endif()
 
+if(HAVE_OPENJPEG)
+  ocv_include_directories(${OPENJPEG_INCLUDE_DIRS})
+  list(APPEND GRFMT_LIBS ${OPENJPEG_LIBRARIES})
+endif()
+
 if(HAVE_JASPER)
   ocv_include_directories(${JASPER_INCLUDE_DIR})
   list(APPEND GRFMT_LIBS ${JASPER_LIBRARIES})
@@ -110,7 +115,7 @@ file(GLOB imgcodecs_ext_hdrs
 
 if(IOS)
   list(APPEND imgcodecs_srcs ${CMAKE_CURRENT_LIST_DIR}/src/ios_conversions.mm)
-  list(APPEND IMGCODECS_LIBRARIES "-framework Accelerate" "-framework CoreGraphics" "-framework QuartzCore" "-framework AssetsLibrary")
+  list(APPEND IMGCODECS_LIBRARIES "-framework Accelerate" "-framework CoreGraphics" "-framework QuartzCore")
 endif()
 if(APPLE_FRAMEWORK)
   list(APPEND IMGCODECS_LIBRARIES "-framework UIKit")

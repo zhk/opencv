@@ -17,6 +17,7 @@
 #include <memory>                   //std::shared_ptr
 #include <cstring>                  //std::memcpy
 #include <numeric>                  //std::accumulate
+#include <vector>
 #include <opencv2/gapi/util/throw.hpp>
 
 namespace cv { namespace gapi { namespace own {
@@ -230,6 +231,7 @@ namespace cv { namespace gapi { namespace own {
         */
         void create(Size _size, int _type)
         {
+            GAPI_Assert(_size.height >= 0 && _size.width >= 0);
             if (_size != Size{cols, rows} )
             {
                 Mat tmp{_size.height, _size.width, _type, nullptr};
@@ -284,7 +286,10 @@ namespace cv { namespace gapi { namespace own {
         The method returns true if Mat::total() is 0 or if Mat::data is NULL. Because of pop_back() and
         resize() methods `M.total() == 0` does not imply that `M.data == NULL`.
          */
-        bool empty() const;
+        bool empty() const
+        {
+            return data == 0 || total() == 0;
+        }
 
         /** @brief Returns the total number of array elements.
 
@@ -293,10 +298,9 @@ namespace cv { namespace gapi { namespace own {
          */
         size_t total() const
         {
-            return static_cast<std::size_t>
-                (dims.empty()
-                 ? (rows * cols)
-                 : std::accumulate(dims.begin(), dims.end(), 1, std::multiplies<int>()));
+            return dims.empty()
+                 ? (static_cast<std::size_t>(rows) * cols)
+                 : std::accumulate(dims.begin(), dims.end(), static_cast<std::size_t>(1), std::multiplies<size_t>());
         }
 
         /** @overload
